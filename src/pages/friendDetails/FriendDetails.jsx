@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router";
 import useFriends from "../../hooks/useFriends";
 import { LuPhoneCall } from "react-icons/lu";
@@ -6,6 +6,13 @@ import { MdDeleteOutline, MdOutlineTextsms } from "react-icons/md";
 import { HiOutlineBellSnooze } from "react-icons/hi2";
 import { FiArchive } from "react-icons/fi";
 import { PropagateLoader } from "react-spinners";
+import { FriendsContext } from "../../context/FriendProvider";
+import { GoDeviceCameraVideo } from "react-icons/go";
+import callicon from '../../assets/call.png';
+import videoicon from '../../assets/video.png';
+import texticon from '../../assets/text.png';
+
+
 
 const FriendDetails = () => {
   const { id } = useParams();
@@ -13,8 +20,21 @@ const FriendDetails = () => {
 
   const { friends, loading } = useFriends();
 
+  
   const friend = friends.find((friend) => friend.id === parseInt(id));
   console.log(friends, loading, friend, "fnd and load..");
+  const {timeline,setTimeline} = useContext(FriendsContext);
+  const handleTimeline = (type, icon) => {
+  const newData = {
+    type,
+    icon,
+    name:friend.name ,
+    date: new Date().toLocaleString(),
+  };
+
+  setTimeline([...timeline, newData]);
+};
+    console.log(timeline, "timeline");
   return (
     <div>
         {loading ? (<div className='flex justify-center items-center'><PropagateLoader color="#244d3f" /></div>) : (<div className="container mx-auto">
@@ -116,20 +136,20 @@ const FriendDetails = () => {
               Quick Check-In
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer">
+              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer" onClick={() =>handleTimeline("Call",callicon)}>
                 <h1>
                   <LuPhoneCall />
                   Call
                 </h1>
               </div>
-              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer">
+              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer" onClick={() =>handleTimeline("Text",texticon)}>
                 <h1>
                   <MdOutlineTextsms /> Text
                 </h1>
               </div>
-              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer">
+              <div className="card card-border bg-base-200 shadow-sm my-4 items-center p-8 cursor-pointer" onClick={() =>handleTimeline("Video",videoicon)}>
                 <h1>
-                  <LuPhoneCall />
+                  <GoDeviceCameraVideo />
                   Video
                 </h1>
               </div>
