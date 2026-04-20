@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FriendsContext } from "../../context/FriendProvider";
 import useFriends from "../../hooks/useFriends";
 import { PropagateLoader } from "react-spinners";
@@ -7,24 +7,21 @@ import { IoIosArrowDown } from "react-icons/io";
 const TimeLine = () => {
   const { timeline } = useContext(FriendsContext);
   const { loading } = useFriends();
-  console.log(timeline, "context data in timeline");
+
+  const [filteredTimeline, setFilteredTimeline] = useState([]);
+
+  useEffect(()=>{
+    setFilteredTimeline(timeline);
+  }, [timeline]);
+console.log(timeline, 'timeline');
 
   const handleFilter = (type) => {
     if (type === 'All') {
-      return;
-    } else if (type === 'Call') {
-      const filteredCall = timeline.filter(tl => tl.type === 'Call');
-      console.log(filteredCall, 'filtered call');
-      return filteredCall;
-    } else if (type === 'Text') {
-      const filteredText = timeline.filter(tl => tl.type === 'Text');
-      console.log(filteredText, 'filtered text');
-      return filteredText;
-    } else if (type === 'Video') {
-      const filteredVideo = timeline.filter(tl => tl.type === 'Video');
-      console.log(filteredVideo, 'filtered video');
-      return filteredVideo;
-    };
+      setFilteredTimeline(timeline);
+    } else{
+      const filteredData = timeline.filter(tl => tl.type === type);
+      setFilteredTimeline(filteredData);
+    }
   };
   return (
     <div className="container mx-auto">
@@ -64,7 +61,7 @@ const TimeLine = () => {
           </div>
         ) : (
           <div>
-            {timeline.map((tl) => (
+            {filteredTimeline.map((tl) => (
               <div
                 key={tl.id}
                 className="border border-gray-300 rounded-2xl shadow-sm mt-5"
