@@ -11,6 +11,7 @@ import { GoDeviceCameraVideo } from "react-icons/go";
 import callicon from '../../assets/call.png';
 import videoicon from '../../assets/video.png';
 import texticon from '../../assets/text.png';
+import { toast } from "react-toastify";
 
 
 
@@ -33,6 +34,8 @@ const FriendDetails = () => {
   };
 
   setTimeline([...timeline, newData]);
+  toast.success(`${type} with ${friend.name} `);
+
 };
     console.log(timeline, "timeline");
   return (
